@@ -718,6 +718,29 @@ This document tracks all Zoom Phone and Contact Center API endpoints that have b
 - **Method**: GET, POST, PATCH, DELETE
 - **Status**: ⚠️ Partially working (GET works, POST fails with missing params)
 
+#### Contact Center Flows
+- **Endpoint**: `GET /contact_center/flows`, `POST /contact_center/flows`, `GET /contact_center/flows/{flowId}`, `PATCH /contact_center/flows/{flowId}`, `DELETE /contact_center/flows/{flowId}`
+- **Purpose**: Manage contact center flows
+- **Method**: GET, POST, PATCH, DELETE
+- **Status**: ❌ Not working (POST consistently fails with "flow_name must not be blank" even when field is provided - endpoint likely not implemented for creation)
+
+#### Contact Center Inboxes
+- **Endpoint**: `GET /contact_center/inboxes`, `POST /contact_center/inboxes`, `GET /contact_center/inboxes/{inboxId}`, `PATCH /contact_center/inboxes/{inboxId}`, `DELETE /contact_center/inboxes`
+- **Purpose**: Manage contact center inboxes
+- **Method**: GET, POST, PATCH, DELETE
+- **Payload (POST)**: `{"inbox_name": "name", "description": "description"}`
+- **Parameters (DELETE)**: `inbox_ids` (array, required), `delete_all_messages_and_inboxes` (boolean), `move_to_inbox_id` (string)
+- **Notes (DELETE)**: Must provide either `delete_all_messages_and_inboxes=true` or `move_to_inbox_id` to specify message handling
+- **Status**: ✅ Working (GET, POST, PATCH, DELETE all tested successfully)
+
+#### Inbox Access Members
+- **Endpoint**: `GET /contact_center/inboxes/{inboxId}/users`, `POST /contact_center/inboxes/{inboxId}/users`, `DELETE /contact_center/inboxes/{inboxId}/users/{userId}`
+- **Purpose**: Manage inbox access members
+- **Method**: GET, POST, DELETE
+- **Payload (POST)**: `{"user_ids": ["userId"]}` (note: array format required)
+- **Response (GET)**: `{"users": [{"user_id": "id", "display_name": "name", "user_email": "email"}]}`
+- **Status**: ✅ Working (GET, POST, DELETE all tested successfully)
+
 #### Consumer Routing Profiles
 - **Endpoint**: `GET /contact_center/consumer_routing_profiles`, `POST /contact_center/consumer_routing_profiles`, `GET /contact_center/consumer_routing_profiles/{consumerRoutingProfileId}`, `PATCH /contact_center/consumer_routing_profiles/{consumerRoutingProfileId}`, `DELETE /contact_center/consumer_routing_profiles/{consumerRoutingProfileId}`
 - **Purpose**: Manage consumer routing profiles

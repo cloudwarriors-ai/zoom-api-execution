@@ -347,6 +347,117 @@ class ZoomAPIClient {
      return this.makeRequest('GET', '/contact_center/recordings', null, params);
    }
 
+   // ===== CONTACT CENTER FLOWS =====
+
+   /**
+    * List contact center flows
+    */
+   async getFlows(params = {}) {
+     return this.makeRequest('GET', '/contact_center/flows', null, params);
+   }
+
+   /**
+    * Create contact center flow
+    */
+   async createFlow(flowData) {
+     // Try with different content types or headers if needed
+     return this.makeRequest('POST', '/contact_center/flows', flowData, null, {
+       'Content-Type': 'application/json'
+     });
+   }
+
+   /**
+    * Get contact center flow details
+    */
+   async getFlow(flowId) {
+     return this.makeRequest('GET', `/contact_center/flows/${flowId}`);
+   }
+
+   /**
+    * Update contact center flow
+    */
+   async updateFlow(flowId, flowData) {
+     return this.makeRequest('PATCH', `/contact_center/flows/${flowId}`, flowData);
+   }
+
+   /**
+    * Delete contact center flow
+    */
+   async deleteFlow(flowId) {
+     return this.makeRequest('DELETE', `/contact_center/flows/${flowId}`);
+   }
+
+   // ===== CONTACT CENTER INBOXES =====
+
+   /**
+    * List contact center inboxes
+    */
+   async getInboxes(params = {}) {
+     return this.makeRequest('GET', '/contact_center/inboxes', null, params);
+   }
+
+   /**
+    * Create contact center inbox
+    */
+   async createInbox(inboxData) {
+     return this.makeRequest('POST', '/contact_center/inboxes', inboxData);
+   }
+
+   /**
+    * Get contact center inbox details
+    */
+   async getInbox(inboxId) {
+     return this.makeRequest('GET', `/contact_center/inboxes/${inboxId}`);
+   }
+
+   /**
+    * Update contact center inbox
+    */
+   async updateInbox(inboxId, inboxData) {
+     return this.makeRequest('PATCH', `/contact_center/inboxes/${inboxId}`, inboxData);
+   }
+
+    /**
+     * Delete contact center inboxes (bulk operation)
+     */
+    async deleteInboxes(inboxIds, options = {}) {
+      const params = {
+        inbox_ids: Array.isArray(inboxIds) ? inboxIds : [inboxIds],
+        ...options
+      };
+      return this.makeRequest('DELETE', '/contact_center/inboxes', null, params);
+    }
+
+    /**
+     * Delete a single contact center inbox
+     */
+    async deleteInbox(inboxId, options = {}) {
+      return this.deleteInboxes([inboxId], options);
+    }
+
+   /**
+    * Get inbox access members
+    */
+   async getInboxMembers(inboxId) {
+     return this.makeRequest('GET', `/contact_center/inboxes/${inboxId}/users`);
+   }
+
+   /**
+    * Add access member to inbox
+    */
+   async addInboxMember(inboxId, userId) {
+     return this.makeRequest('POST', `/contact_center/inboxes/${inboxId}/users`, {
+       user_ids: [userId]
+     });
+   }
+
+   /**
+    * Remove access member from inbox
+    */
+   async removeInboxMember(inboxId, userId) {
+     return this.makeRequest('DELETE', `/contact_center/inboxes/${inboxId}/users/${userId}`);
+   }
+
    // ===== SKILLS & SKILL CATEGORIES =====
 
    /**
