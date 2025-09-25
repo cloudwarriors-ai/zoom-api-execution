@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom API Integration Dashboard</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 20px;
+        }
+        .section h2 {
+            color: #34495e;
+            margin-top: 0;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .method.GET { background: #28a745; color: white; }
+        .method.POST { background: #007bff; color: white; }
+        .method.PATCH { background: #ffc107; color: black; }
+        .method.DELETE { background: #dc3545; color: white; }
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .description {
+            color: #6c757d;
+            margin: 5px 0;
+        }
+        .status {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status.✅ { background: #d4edda; color: #155724; }
+        .status.⚠️ { background: #fff3cd; color: #856404; }
+        .status.🔍 { background: #d1ecf1; color: #0c5460; }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        .test-btn:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .success { border-color: #28a745; background: #d4edda; }
+        .error { border-color: #dc3545; background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Zoom API Integration Dashboard</h1>
+
+        <div class="section">
+            <h2>🔐 Authentication</h2>
+            <div class="endpoint">
+                <span class="method GET">GET</span>
+                <span class="endpoint-url">/api/auth/test</span>
+                <div class="description">Test Zoom API authentication and get current user info</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="testEndpoint('/api/auth/test')">Test</button>
+                <div id="auth-result" class="result" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👥 Phone User Management</h2>
+            <div class="endpoint">
+                <span class="method GET">GET</span>
+                <span class="endpoint-url">/api/users</span>
+                <div class="description">List all phone users</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="testEndpoint('/api/users?page_size=5')">Test</button>
+                <div id="users-result" class="result" style="display: none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method PATCH">PATCH</span>
+                <span class="endpoint-url">/api/users/{userId}/extension</span>
+                <div class="description">Update user extension number</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="showExtensionForm()">Update Extension</button>
+                <div id="extension-form" style="display: none; margin: 10px 0;">
+                    <input type="text" id="user-id" placeholder="User ID" style="margin: 5px; padding: 5px;">
+                    <input type="number" id="new-extension" placeholder="New Extension" style="margin: 5px; padding: 5px;">
+                    <button class="test-btn" onclick="updateExtension()">Submit</button>
+                </div>
+                <div id="extension-result" class="result" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📞 Phone Number Management</h2>
+            <div class="endpoint">
+                <span class="method GET">GET</span>
+                <span class="endpoint-url">/api/phone-numbers</span>
+                <div class="description">List all phone numbers</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="testEndpoint('/api/phone-numbers?page_size=5')">Test</button>
+                <div id="numbers-result" class="result" style="display: none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method POST">POST</span>
+                <span class="endpoint-url">/api/users/{userId}/phone-numbers/{numberId}</span>
+                <div class="description">Assign phone number to user</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="showAssignForm()">Assign Number</button>
+                <div id="assign-form" style="display: none; margin: 10px 0;">
+                    <input type="text" id="assign-user-id" placeholder="User ID" style="margin: 5px; padding: 5px;">
+                    <input type="text" id="assign-number-id" placeholder="Phone Number ID" style="margin: 5px; padding: 5px;">
+                    <button class="test-btn" onclick="assignNumber()">Assign</button>
+                </div>
+                <div id="assign-result" class="result" style="display: none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method DELETE">DELETE</span>
+                <span class="endpoint-url">/api/users/{userId}/phone-numbers/{numberId}</span>
+                <div class="description">Unassign phone number from user</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="showUnassignForm()">Unassign Number</button>
+                <div id="unassign-form" style="display: none; margin: 10px 0;">
+                    <input type="text" id="unassign-user-id" placeholder="User ID" style="margin: 5px; padding: 5px;">
+                    <input type="text" id="unassign-number-id" placeholder="Phone Number ID" style="margin: 5px; padding: 5px;">
+                    <button class="test-btn" onclick="unassignNumber()">Unassign</button>
+                </div>
+                <div id="unassign-result" class="result" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Call Logs</h2>
+            <div class="endpoint">
+                <span class="method GET">GET</span>
+                <span class="endpoint-url">/api/call-logs</span>
+                <div class="description">Get recent call logs</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="testEndpoint('/api/call-logs?page_size=5')">Test</button>
+                <div id="logs-result" class="result" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Call Queues</h2>
+            <div class="endpoint">
+                <span class="method GET">GET</span>
+                <span class="endpoint-url">/api/call-queues</span>
+                <div class="description">List all call queues</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="testEndpoint('/api/call-queues')">Test</button>
+                <div id="queues-result" class="result" style="display: none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method POST">POST</span>
+                <span class="endpoint-url">/api/call-queues</span>
+                <div class="description">Create a new call queue</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="showCreateQueueForm()">Create Queue</button>
+                <div id="create-queue-form" style="display: none; margin: 10px 0;">
+                    <input type="text" id="queue-name" placeholder="Queue Name" style="margin: 5px; padding: 5px;">
+                    <input type="text" id="site-id" placeholder="Site ID" style="margin: 5px; padding: 5px;">
+                    <input type="number" id="queue-extension" placeholder="Extension" style="margin: 5px; padding: 5px;">
+                    <button class="test-btn" onclick="createQueue()">Create</button>
+                </div>
+                <div id="create-queue-result" class="result" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👤 Zoom User Management</h2>
+            <div class="endpoint">
+                <span class="method POST">POST</span>
+                <span class="endpoint-url">/api/zoom-users</span>
+                <div class="description">Create a new Zoom user account</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="showCreateUserForm()">Create User</button>
+                <div id="create-user-form" style="display: none; margin: 10px 0;">
+                    <input type="email" id="user-email" placeholder="Email" style="margin: 5px; padding: 5px;">
+                    <input type="text" id="user-first-name" placeholder="First Name" style="margin: 5px; padding: 5px;">
+                    <input type="text" id="user-last-name" placeholder="Last Name" style="margin: 5px; padding: 5px;">
+                    <button class="test-btn" onclick="createUser()">Create</button>
+                </div>
+                <div id="create-user-result" class="result" style="display: none;"></div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method DELETE">DELETE</span>
+                <span class="endpoint-url">/api/zoom-users/{userId}</span>
+                <div class="description">Delete a Zoom user account</div>
+                <span class="status ✅">Working</span>
+                <button class="test-btn" onclick="showDeleteUserForm()">Delete User</button>
+                <div id="delete-user-form" style="display: none; margin: 10px 0;">
+                    <input type="text" id="delete-user-id" placeholder="User ID" style="margin: 5px; padding: 5px;">
+                    <button class="test-btn" onclick="deleteUser()">Delete</button>
+                </div>
+                <div id="delete-user-result" class="result" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function testEndpoint(url) {
+            const resultDiv = document.getElementById(url.split('/').pop() + '-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Loading...';
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function showExtensionForm() {
+            document.getElementById('extension-form').style.display = 'block';
+        }
+
+        async function updateExtension() {
+            const userId = document.getElementById('user-id').value;
+            const extension = document.getElementById('new-extension').value;
+
+            const resultDiv = document.getElementById('extension-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Updating...';
+
+            try {
+                const response = await fetch(`/api/users/${userId}/extension`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ extension_number: parseInt(extension) })
+                });
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function showAssignForm() {
+            document.getElementById('assign-form').style.display = 'block';
+        }
+
+        async function assignNumber() {
+            const userId = document.getElementById('assign-user-id').value;
+            const numberId = document.getElementById('assign-number-id').value;
+
+            const resultDiv = document.getElementById('assign-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Assigning...';
+
+            try {
+                const response = await fetch(`/api/users/${userId}/phone-numbers/${numberId}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function showUnassignForm() {
+            document.getElementById('unassign-form').style.display = 'block';
+        }
+
+        async function unassignNumber() {
+            const userId = document.getElementById('unassign-user-id').value;
+            const numberId = document.getElementById('unassign-number-id').value;
+
+            const resultDiv = document.getElementById('unassign-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Unassigning...';
+
+            try {
+                const response = await fetch(`/api/users/${userId}/phone-numbers/${numberId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function showCreateQueueForm() {
+            document.getElementById('create-queue-form').style.display = 'block';
+        }
+
+        async function createQueue() {
+            const name = document.getElementById('queue-name').value;
+            const siteId = document.getElementById('site-id').value;
+            const extension = document.getElementById('queue-extension').value;
+
+            const resultDiv = document.getElementById('create-queue-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Creating...';
+
+            try {
+                const response = await fetch('/api/call-queues', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        site_id: siteId,
+                        extension_number: parseInt(extension)
+                    })
+                });
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function showCreateUserForm() {
+            document.getElementById('create-user-form').style.display = 'block';
+        }
+
+        async function createUser() {
+            const email = document.getElementById('user-email').value;
+            const firstName = document.getElementById('user-first-name').value;
+            const lastName = document.getElementById('user-last-name').value;
+
+            const resultDiv = document.getElementById('create-user-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Creating...';
+
+            try {
+                const response = await fetch('/api/zoom-users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        first_name: firstName,
+                        last_name: lastName
+                    })
+                });
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function showDeleteUserForm() {
+            document.getElementById('delete-user-form').style.display = 'block';
+        }
+
+        async function deleteUser() {
+            const userId = document.getElementById('delete-user-id').value;
+
+            const resultDiv = document.getElementById('delete-user-result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Deleting...';
+
+            try {
+                const response = await fetch(`/api/zoom-users/${userId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+    </script>
+</body>
+</html>
