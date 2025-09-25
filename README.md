@@ -1,6 +1,6 @@
 # 🎯 Zoom Phone & Contact Center API Integration
 
-[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=flat&logo=github)](https://github.com/cloudwarriors-ai/zoom-apis-integration)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=flat&logo=github)](https://github.com/cloudwarriors-ai/zoom-api-execution)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green?style=flat&logo=node.js)](https://nodejs.org/)
 [![Zoom APIs](https://img.shields.io/badge/Zoom-APIs-orange?style=flat&logo=zoom)](https://developers.zoom.us/docs/api/)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat)](LICENSE)
