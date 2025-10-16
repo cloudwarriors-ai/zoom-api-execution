@@ -1,18 +1,12 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from zoom_api_client import ZoomAPIClient
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 zoom_client = ZoomAPIClient()
-
-@app.route('/')
-def index():
-    """Main dashboard page"""
-    return render_template('index.html')
 
 @app.route('/api/health')
 def health_check():

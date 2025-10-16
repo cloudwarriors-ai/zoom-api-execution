@@ -61,9 +61,45 @@ This document tracks all Zoom Phone API endpoints that have been successfully te
 
 #### Alert Settings
 - **Endpoint**: `GET /phone/alert_settings`, `POST /phone/alert_settings`, `PATCH /phone/alert_settings/{alertSettingId}`
-- **Purpose**: Manage phone alert settings
+- **Purpose**: Manage phone alert settings and emergency service notifications
 - **Method**: GET, POST, PATCH
-- **Status**: 🔍 Not tested
+- **Status**: ✅ Working (POST tested)
+
+#### Create Emergency Alert
+- **Endpoint**: `POST /phone/alert_settings`
+- **Purpose**: Create emergency service alert notifications for sites
+- **Method**: POST
+- **Payload**:
+  ```json
+  {
+    "alert_setting_name": "CDPS-PV Emergency Alert",
+    "module": 5,
+    "rule": 14,
+    "target_type": 4,
+    "target_ids": ["trJk9j8bSJCvI2DtPoboUQ"],
+    "rule_conditions": [
+      {
+        "rule_condition_type": 5,
+        "rule_condition_value": "Critical"
+      }
+    ],
+    "time_frame_type": "all_day",
+    "time_frame_from": "08:30:00",
+    "time_frame_to": "18:00:00",
+    "frequency": 5,
+    "email_recipients": ["compliance@platinumderm.com"],
+    "status": 1
+  }
+  ```
+- **Status**: ✅ Working
+- **Important Notes**:
+  - `module: 5` is for emergency services
+  - `rule: 14` is the emergency alert rule
+  - `target_type: 4` indicates Site target
+  - `rule_condition_value` MUST be "Critical" for emergency alerts (not "severity" or "Warning")
+  - `time_frame_from` and `time_frame_to` are REQUIRED even when using `time_frame_type: "all_day"`
+  - `email_recipients` should use the "Emergency email" from the PAD Sites CSV
+  - Successfully tested with alert ID: `L5svRxVgT5W9jZA_jh3M8w`
 
 #### Phone Settings
 - **Endpoint**: `GET /phone/settings`
@@ -410,10 +446,38 @@ This document tracks all Zoom Phone API endpoints that have been successfully te
 - **Method**: GET
 - **Status**: 🔍 Not tested
 
+#### Create Site
+- **Endpoint**: `POST /phone/sites`
+- **Purpose**: Create a new Zoom Phone site
+- **Method**: POST
+- **Payload**: 
+  ```json
+  {
+    "name": "CDPS-PV",
+    "timezone": "America/Phoenix",
+    "auto_receptionist_name": "CDPS-PV",
+    "default_emergency_address": {
+      "address_line1": "11209 N Tatum Blvd",
+      "address_line2": "Suite 175",
+      "city": "Phoenix",
+      "state_code": "AZ",
+      "zip": "85028",
+      "country": "US"
+    }
+  }
+  ```
+- **Status**: ✅ Working
+- **Important Notes**:
+  - `auto_receptionist_name` is REQUIRED and should match the site name
+  - `default_emergency_address` is REQUIRED and must be a structured object (not a string)
+  - Emergency address should match the physical site location
+  - Timezone format: use IANA format like `America/Phoenix` (not `US/Arizona`)
+  - Successfully tested with site ID: `trJk9j8bSJCvI2DtPoboUQ`
+
 #### Site Management
-- **Endpoint**: `GET /phone/sites/{siteId}`, `POST /phone/sites`, `PATCH /phone/sites/{siteId}`, `DELETE /phone/sites/{siteId}`
-- **Purpose**: CRUD operations for sites
-- **Method**: GET, POST, PATCH, DELETE
+- **Endpoint**: `GET /phone/sites/{siteId}`, `PATCH /phone/sites/{siteId}`, `DELETE /phone/sites/{siteId}`
+- **Purpose**: Get, update, or delete existing sites
+- **Method**: GET, PATCH, DELETE
 - **Status**: 🔍 Not tested
 
 ### Emergency Services
