@@ -4,43 +4,19 @@
   "description": "Complete Zoom Phone and Contact Center API integration",
   "main": "zoom-api-client.js",
   "scripts": {
-    "phone-examples": "node examples/phone-examples.js",
-    "contact-center-examples": "node examples/contact-center-examples.js",
-    "test-auth": "node examples/test-auth.js",
-    "change-extension": "node examples/change-extension.js",
-    "change-tyler-extension": "node examples/change-tyler-extension.js",
-    "remove-tyler-phone": "node examples/remove-tyler-phone.js",
-    "reassign-tyler-phone": "node examples/reassign-tyler-phone.js",
-    "check-phone-number": "node examples/check-phone-number.js",
-    "unassign-phone-user": "node examples/unassign-phone-user-endpoint.js",
-    "create-zoom-user": "node examples/create-zoom-user.js",
-    "delete-zoom-user": "node examples/delete-zoom-user.js",
-    "create-call-queue": "node examples/create-call-queue.js",
-    "add-users-to-queue": "node examples/add-all-users-to-queue.js",
-    "check-queue-members": "node examples/check-queue-members.js",
-    "remove-all-queue-members": "node examples/remove-all-queue-members.js",
-    "force-remove-members": "node examples/force-remove-members.js",
-    "change-queue-extension": "node examples/change-queue-extension.js",
-    "manage-car-brands-skills": "node examples/manage-car-brands-skills.js",
-    "create-user-tyler-pratt": "node examples/create-user-tyler-pratt.js",
-    "enable-user-phone-6969": "node examples/enable-user-phone-6969.js",
-    "check-and-set-extension": "node examples/check-and-set-extension.js",
-    "check-phone-licenses": "node examples/check-phone-licenses.js",
-    "assign-phone-license": "node examples/assign-phone-license.js",
-    "deactivate-user-tyler-pratt": "node examples/deactivate-user-tyler-pratt.js",
-    "create-contact-center-flow": "node examples/create-contact-center-flow.js",
-    "test-flow-endpoint": "node examples/test-flow-endpoint.js",
-    "create-contact-center-inbox": "node examples/create-contact-center-inbox.js",
-    "create-color-inboxes": "node examples/create-color-inboxes.js",
-    "add-tyler-to-color-inboxes": "node examples/add-tyler-to-color-inboxes.js",
-    "delete-color-inboxes": "node examples/delete-color-inboxes.js",
-    "check-contact-center-users": "node examples/check-contact-center-users.js"
+    "start": "python app.py"
   },
   "dependencies": {
     "axios": "^1.6.0",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "xlsx": "^0.18.5"
   },
-  "keywords": ["zoom", "api", "phone", "contact-center"],
+  "keywords": [
+    "zoom",
+    "api",
+    "phone",
+    "contact-center"
+  ],
   "author": "",
   "license": "MIT"
 }

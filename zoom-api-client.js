@@ -233,6 +233,46 @@ class ZoomAPIClient {
     return this.makeRequest('GET', '/phone/settings');
   }
 
+  async getSites(params = {}) {
+    return this.makeRequest('GET', '/phone/sites', null, params);
+  }
+
+  async getSite(siteId) {
+    return this.makeRequest('GET', `/phone/sites/${siteId}`);
+  }
+
+  async createSite(siteData) {
+    return this.makeRequest('POST', '/phone/sites', siteData);
+  }
+
+  async updateSite(siteId, siteData) {
+    return this.makeRequest('PATCH', `/phone/sites/${siteId}`, siteData);
+  }
+
+  async deleteSite(siteId) {
+    return this.makeRequest('DELETE', `/phone/sites/${siteId}`);
+  }
+
+  async getAlertSettings(params = {}) {
+    return this.makeRequest('GET', '/phone/alert_settings', null, params);
+  }
+
+  async getAlertSetting(alertSettingId) {
+    return this.makeRequest('GET', `/phone/alert_settings/${alertSettingId}`);
+  }
+
+  async createAlertSetting(alertData) {
+    return this.makeRequest('POST', '/phone/alert_settings', alertData);
+  }
+
+  async updateAlertSetting(alertSettingId, alertData) {
+    return this.makeRequest('PATCH', `/phone/alert_settings/${alertSettingId}`, alertData);
+  }
+
+  async deleteAlertSetting(alertSettingId) {
+    return this.makeRequest('DELETE', `/phone/alert_settings/${alertSettingId}`);
+  }
+
   // ===== ZOOM CONTACT CENTER APIs =====
 
   /**
